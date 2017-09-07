@@ -5,6 +5,12 @@
  */
 package grafos;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+
 /**
  *
  * @author dacuentas
@@ -14,10 +20,104 @@ public class Ventana extends javax.swing.JFrame {
     /**
      * Creates new form Ventana
      */
+    ArrayList<Nodo> nodos;
+    ArrayList<Arco> arcos;
+    int cantNodos = 0;
+    Nodo nodoinicial = null, nodofinal = null;
+    int tamNodos = 30;
+   
     public Ventana() {
         initComponents();
+        nodos = new ArrayList<>();
+        arcos = new ArrayList<>();
+        Insertar(jPanel1.getGraphics());
     }
 
+    private void Insertar(Graphics g){
+        jPanel1.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (jRadioButton1.isSelected()) {
+                    g.setColor(Color.black);
+                    g.fillOval(e.getX() - (tamNodos/2), e.getY()-(tamNodos/2), tamNodos, tamNodos);
+                    nodos.add(new Nodo(cantNodos,e.getX() - (tamNodos/2),e.getY()- (tamNodos/2),Color.BLACK));
+                    g.setColor(Color.yellow);
+                    g.drawString(Integer.toString(cantNodos), e.getX(), e.getY());
+                    cantNodos++;
+                }else{
+                    if(nodoinicial == null){
+                        nodoinicial = BuscarNodo(e.getX(), e.getY());
+                        if (nodoinicial!=null) {
+                            seleccionarNodo(nodoinicial, g, Color.red);
+                        }
+                    }else{
+                        nodofinal = BuscarNodo(e.getX(), e.getY());
+                        if (nodofinal!=null) {
+                            seleccionarNodo(nodofinal, g, Color.red);
+                            if (nodofinal.name != nodoinicial.name) {
+                                g.setColor(Color.black);
+                                g.drawLine(nodoinicial.posx + (tamNodos/2), nodoinicial.posy + (tamNodos/2)
+                                        , nodofinal.posx + (tamNodos/2), nodofinal.posy + (tamNodos/2));
+                                arcos.add(new Arco(nodoinicial.name, nodofinal.name, nodoinicial.posx + (tamNodos/2), 
+                                        nodoinicial.posy + (tamNodos/2) , nodofinal.posx + (tamNodos/2), nodofinal.posy + (tamNodos/2)));
+                            }else{
+                                seleccionarNodo(nodoinicial, g, Color.black);
+                            }
+                            seleccionarNodo(nodoinicial, g, Color.black);
+                            seleccionarNodo(nodofinal, g, Color.black);
+                            nodoinicial=null;
+                        }else{
+                            seleccionarNodo(nodoinicial, g, Color.black);
+                            nodoinicial=null;
+                        }
+                    }
+                    
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        
+        });
+    
+    
+    }
+    
+    private void seleccionarNodo(Nodo nodo, Graphics g, Color color){
+        g.setColor(color);
+        g.drawOval(nodo.posx, nodo.posy, tamNodos-1, tamNodos-1);
+    
+    
+    }
+    private Nodo BuscarNodo(int coordx, int coordy){
+        Nodo nodoReturn= null;
+        for (Nodo nodo : nodos) {
+            if (coordx  >= nodo.posx && coordx <= nodo.posx + tamNodos 
+                    && coordy >= nodo.posy && coordy <= nodo.posy + tamNodos) {
+                nodoReturn = nodo;
+                break;
+            }
+        }
+        
+        return nodoReturn;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
