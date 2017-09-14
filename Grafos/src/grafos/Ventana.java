@@ -23,6 +23,7 @@ public class Ventana extends javax.swing.JFrame {
     ArrayList<Nodo> nodos;
     ArrayList<Arco> arcos;
     int cantNodos = 0;
+    String [][] matrizAd;
     Nodo nodoinicial = null, nodofinal = null;
     int tamNodos = 20;
    
@@ -40,9 +41,9 @@ public class Ventana extends javax.swing.JFrame {
                 if (jRadioButton1.isSelected()) {
                     g.setColor(Color.black);
                     g.fillOval(e.getX() - (tamNodos/2), e.getY()-(tamNodos/2), tamNodos, tamNodos);
-                    nodos.add(new Nodo(cantNodos,e.getX() - (tamNodos/2),e.getY()- (tamNodos/2),Color.BLACK));
+                    nodos.add(new Nodo(cantNodos+1,e.getX() - (tamNodos/2),e.getY()- (tamNodos/2),Color.BLACK));
                     g.setColor(Color.yellow);
-                    g.drawString(Integer.toString(cantNodos), e.getX()-3, e.getY()+4);
+                    g.drawString(Integer.toString(cantNodos+1), e.getX()-3, e.getY()+4);
                     cantNodos++;
                 }else{
                     if(nodoinicial == null){
@@ -131,6 +132,7 @@ public class Ventana extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -158,6 +160,13 @@ public class Ventana extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("Arco");
 
+        jButton1.setText("Matriz de Adyacencia");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -166,8 +175,9 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -180,7 +190,9 @@ public class Ventana extends javax.swing.JFrame {
                         .addComponent(jRadioButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRadioButton2)
-                        .addGap(0, 229, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addGap(0, 204, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -191,6 +203,59 @@ public class Ventana extends javax.swing.JFrame {
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (cantNodos!=0) {
+            matrizAd = new String[cantNodos+1][cantNodos+1];            
+            int mX=1, mY=1;
+            //System.out.println(cantNodos);
+            for (Nodo nodo : nodos) {
+                matrizAd[mX][0] = nodo.name+"";
+                matrizAd[0][mY] = nodo.name+"";
+                mX++; mY++;
+            }
+            /**for (int x=0; x < matrizAd. length; x++) {
+                for (int y=0; y < matrizAd[x]. length; y++) {
+                    if (x>0 && y>0 || x==0 & y==0) {
+                        System.out.print ("("+matrizAd[x][y]+")"); 
+                    }else{
+                        System.out.print ("["+matrizAd[x][y]+"]");                  
+                    }
+                }
+                System.out.println("");
+            }
+            System.out.println(arcos.size());*/
+            for (Arco arco : arcos) {
+                for (int i = 0; i < matrizAd.length; i++) {
+                    if (arco.nodoinicial==i) {
+                        for (int j = 0; j < matrizAd.length; j++) {                       
+                            if (arco.nodofinal==j) {
+                                matrizAd[i][j]="*";
+                                matrizAd[j][i]="*";
+                            }
+                        }                        
+                    }                    
+                }
+                
+            }
+            for (int x=0; x < matrizAd. length; x++) {
+                for (int y=0; y < matrizAd[x]. length; y++) {
+                    if (matrizAd[x][y]==null) {
+                        matrizAd[x][y]="0";
+                    }
+                    if (x>0 && y>0 || x==0 & y==0) {
+                        System.out.print ("("+matrizAd[x][y]+")"); 
+                    }else{
+                        System.out.print ("["+matrizAd[x][y]+"]");                  
+                    }
+                }
+                System.out.println("");
+            }
+            
+        }else{
+            System.out.println("No hay nodos");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,6 +294,7 @@ public class Ventana extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
