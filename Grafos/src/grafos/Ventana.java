@@ -24,7 +24,7 @@ public class Ventana extends javax.swing.JFrame {
     ArrayList<Arco> arcos;
     int cantNodos = 0;
     Nodo nodoinicial = null, nodofinal = null;
-    int tamNodos = 30;
+    int tamNodos = 20;
    
     public Ventana() {
         initComponents();
@@ -42,7 +42,7 @@ public class Ventana extends javax.swing.JFrame {
                     g.fillOval(e.getX() - (tamNodos/2), e.getY()-(tamNodos/2), tamNodos, tamNodos);
                     nodos.add(new Nodo(cantNodos,e.getX() - (tamNodos/2),e.getY()- (tamNodos/2),Color.BLACK));
                     g.setColor(Color.yellow);
-                    g.drawString(Integer.toString(cantNodos), e.getX(), e.getY());
+                    g.drawString(Integer.toString(cantNodos), e.getX()-3, e.getY()+4);
                     cantNodos++;
                 }else{
                     if(nodoinicial == null){
