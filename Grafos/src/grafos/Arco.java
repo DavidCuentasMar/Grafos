@@ -12,15 +12,17 @@ package grafos;
 public class Arco {
     int nodoinicial;
     int nodofinal;
+    int distancia;
     int x1, y1, x2, y2;
 
-    public Arco(int nodoinicial, int nodofinal, int x1, int y1, int x2, int y2) {
+    public Arco(int nodoinicial, int nodofinal, int x1, int y1, int x2, int y2, int dist){
         this.nodoinicial = nodoinicial;
         this.nodofinal = nodofinal;
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.distancia=dist;
     }
 
     public int getNodoinicial() {

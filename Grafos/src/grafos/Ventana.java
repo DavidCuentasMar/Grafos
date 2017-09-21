@@ -26,6 +26,7 @@ public class Ventana extends javax.swing.JFrame {
     String [][] matrizAd;
     Nodo nodoinicial = null, nodofinal = null;
     int tamNodos = 20;
+    int[][] matriz;
    
     public Ventana() {
         initComponents();
@@ -33,7 +34,10 @@ public class Ventana extends javax.swing.JFrame {
         arcos = new ArrayList<>();
         Insertar(jPanel1.getGraphics());
     }
-
+    private int distancia (int x1, int x2, int y1, int y2){
+        double dist = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+        return (int)dist;
+    }
     private void Insertar(Graphics g){
         jPanel1.addMouseListener(new MouseListener(){
             @Override
@@ -59,8 +63,10 @@ public class Ventana extends javax.swing.JFrame {
                                 g.setColor(Color.black);
                                 g.drawLine(nodoinicial.posx + (tamNodos/2), nodoinicial.posy + (tamNodos/2)
                                         , nodofinal.posx + (tamNodos/2), nodofinal.posy + (tamNodos/2));
+                                int distancia = distancia(nodoinicial.posx + (tamNodos/2), nodofinal.posx + (tamNodos/2),nodoinicial.posy + (tamNodos/2),nodofinal.posy + (tamNodos/2));
                                 arcos.add(new Arco(nodoinicial.name, nodofinal.name, nodoinicial.posx + (tamNodos/2), 
-                                        nodoinicial.posy + (tamNodos/2) , nodofinal.posx + (tamNodos/2), nodofinal.posy + (tamNodos/2)));
+                                        nodoinicial.posy + (tamNodos/2) , nodofinal.posx + (tamNodos/2), nodofinal.posy + (tamNodos/2), distancia));
+                                System.out.println("distancia: " + distancia);
                             }else{
                                 seleccionarNodo(nodoinicial, g, Color.black);
                             }
@@ -205,7 +211,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (cantNodos!=0) {
+        /**if (cantNodos!=0) {
             matrizAd = new String[cantNodos+1][cantNodos+1];            
             int mX=1, mY=1;
             //System.out.println(cantNodos);
@@ -214,7 +220,7 @@ public class Ventana extends javax.swing.JFrame {
                 matrizAd[0][mY] = nodo.name+"";
                 mX++; mY++;
             }
-            /**for (int x=0; x < matrizAd. length; x++) {
+            for (int x=0; x < matrizAd. length; x++) {
                 for (int y=0; y < matrizAd[x]. length; y++) {
                     if (x>0 && y>0 || x==0 & y==0) {
                         System.out.print ("("+matrizAd[x][y]+")"); 
@@ -224,7 +230,7 @@ public class Ventana extends javax.swing.JFrame {
                 }
                 System.out.println("");
             }
-            System.out.println(arcos.size());*/
+            System.out.println(arcos.size());
             for (Arco arco : arcos) {
                 for (int i = 0; i < matrizAd.length; i++) {
                     if (arco.nodoinicial==i) {
@@ -254,9 +260,56 @@ public class Ventana extends javax.swing.JFrame {
             
         }else{
             System.out.println("No hay nodos");
-        }
+        }*/
+        calcularMatriz();
+        Prim(matriz);
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    private void calcularMatriz(){
+        System.out.println(nodos.size());
+    matriz = new int[nodos.size()][nodos.size()];
+        for (Arco arco: arcos) {
+            System.out.println(arco.nodofinal);
+            matriz[arco.nodoinicial-1][arco.nodofinal-1]=arco.distancia;
+            matriz[arco.nodofinal-1][arco.nodoinicial-1]=arco.distancia;
+        }
+    
+    }
+    public void Prim(int[][] matriz){
+        boolean vector[] = new boolean[nodos.size()];
+        vector[0] = true;
+        while(todosSeleccionados(vector)){
+            int min = menor(matriz, vector);
+            vector[min] = true;
+        }
+    }
+    private int menor(int[][] matriz, boolean[] vector){
+        int menor = Integer.MAX_VALUE;
+        int fila = -1, col = -1;
+        for (int i = 0; i < matriz.length; i++) {
+            if(vector[i]){
+                for (int j = 0; j < matriz.length; j++) {
+                    if (matriz[j][i]!=0 && vector[j]==false && matriz[j][i]<=menor) {
+                        menor= matriz[j][i];
+                        fila=j;
+                        col = i;
+                    }
+                }
+            }
+        }
+        System.out.println("" + fila + " - " + col);
+        return fila;
+    }
+    private Boolean todosSeleccionados(boolean[] vector){
+        for (int i = 0; i < vector.length; i++) {
+            if (!vector[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    
     /**
      * @param args the command line arguments
      */
